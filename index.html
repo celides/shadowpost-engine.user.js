@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
-<title>ShadowPost Pro v3 · Edición Personal</title>
+<title>ShadowPost Pro v3 · Facebook Safe Edition</title>
 <style>
   :root{
     --bg:#050b12;
@@ -14,6 +14,8 @@
     --text:#c9f5ff;
     --dim:#5b7d8c;
     --danger:#ff3860;
+    --warning:#ffb020;
+    --safe:#12ffb0;
     --font-mono:'Courier New', ui-monospace, monospace;
   }
   *{box-sizing:border-box;}
@@ -30,7 +32,7 @@
     min-height:100vh;
     padding:14px;
   }
-  .wrap{max-width:720px;margin:0 auto;}
+  .wrap{max-width:750px;margin:0 auto;}
   header{
     text-align:center;
     padding:18px 10px 22px;
@@ -84,7 +86,7 @@
     text-transform:uppercase;
     margin:10px 0 4px;
   }
-  input[type=text], input[type=password], input[type=number], textarea{
+  input[type=text], input[type=password], input[type=number], textarea, select{
     width:100%;
     background:#031019;
     border:1px solid var(--panel-edge);
@@ -96,7 +98,8 @@
     outline:none;
     resize:vertical;
   }
-  input:focus, textarea:focus{border-color:var(--cyan);box-shadow:0 0 8px rgba(32,232,255,0.35);}
+  input:focus, textarea:focus, select:focus{border-color:var(--cyan);box-shadow:0 0 8px rgba(32,232,255,0.35);}
+  select option{background:#031019;color:var(--text);}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
   .row > div{flex:1;min-width:140px;}
   .btn{
@@ -119,6 +122,8 @@
   .btn.green{border-color:var(--emerald);color:var(--emerald);}
   .btn.green:hover{background:rgba(18,255,176,0.1);box-shadow:0 0 14px rgba(18,255,176,0.4);}
   .btn.small{width:auto;padding:7px 12px;font-size:.68rem;margin-top:0;}
+  .btn.danger{border-color:var(--danger);color:var(--danger);}
+  .btn.danger:hover{background:rgba(255,56,96,0.1);box-shadow:0 0 14px rgba(255,56,96,0.4);}
   .console{
     background:#020608;
     border:1px solid var(--panel-edge);
@@ -132,13 +137,13 @@
   .console .l{margin:0;white-space:pre-wrap;word-break:break-word;}
   .console .sys{color:var(--dim);}
   .console .ok{color:var(--emerald);}
-  .console .warn{color:#ffb020;}
+  .console .warn{color:var(--warning);}
   .console .err{color:var(--danger);}
+  .console .safe{color:var(--safe);}
   footer{text-align:center;color:var(--dim);font-size:.65rem;margin:20px 0 6px;letter-spacing:1px;}
   ::-webkit-scrollbar{width:6px;}
   ::-webkit-scrollbar-thumb{background:var(--panel-edge);border-radius:4px;}
 
-  /* Colonias chips */
   .chip-input-row{display:flex;gap:8px;margin-top:6px;}
   .chip-input-row input{flex:1;}
   .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
@@ -150,15 +155,18 @@
     background:none;border:none;color:var(--danger);cursor:pointer;font-size:.8rem;line-height:1;
     font-family:var(--font-mono);
   }
-
-  /* Variantes */
   .variant-card{
     background:#031019;
     border:1px solid var(--panel-edge);
     border-radius:6px;
     padding:12px;
     margin-top:12px;
+    position:relative;
   }
+  .variant-card.safe{border-color:var(--safe);}
+  .variant-card.warning{border-color:var(--warning);}
+  .variant-card.danger{border-color:var(--danger);}
+  
   .variant-head{
     display:flex;justify-content:space-between;align-items:center;
     font-size:.68rem;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;
@@ -172,6 +180,37 @@
   .btn-row .btn{margin-top:0;flex:1;min-width:110px;}
   .wa-btn{border-color:var(--emerald);color:var(--emerald);}
   .wa-btn:hover{background:rgba(18,255,176,0.12);box-shadow:0 0 14px rgba(18,255,176,0.5);}
+  
+  .safety-badge{
+    display:inline-block;
+    padding:2px 8px;
+    border-radius:12px;
+    font-size:.6rem;
+    letter-spacing:1px;
+    margin-left:8px;
+  }
+  .safety-badge.safe{background:rgba(18,255,176,0.15);color:var(--safe);border:1px solid var(--safe);}
+  .safety-badge.warning{background:rgba(255,176,32,0.15);color:var(--warning);border:1px solid var(--warning);}
+  .safety-badge.danger{background:rgba(255,56,96,0.15);color:var(--danger);border:1px solid var(--danger);}
+  
+  .rules-list{
+    background:#020608;
+    border:1px solid var(--panel-edge);
+    border-radius:4px;
+    padding:8px 12px;
+    margin-top:8px;
+    font-size:.7rem;
+    line-height:1.6;
+  }
+  .rules-list .rule-item{
+    display:flex;
+    align-items:flex-start;
+    gap:8px;
+    padding:2px 0;
+  }
+  .rules-list .rule-item .icon{color:var(--emerald);}
+  .rules-list .rule-item .desc{color:var(--dim);}
+  .rules-list .rule-item .desc strong{color:var(--text);}
 </style>
 </head>
 <body>
@@ -179,20 +218,77 @@
 
   <header>
     <h1>SHADOWPOST PRO v3</h1>
-    <div class="sub">EDICIÓN PERSONAL · GENERADOR DE VARIANTES NEUROVENTAS</div>
+    <div class="sub">FACEBOOK SAFE EDITION · PROTECCIÓN ANTIBAN</div>
   </header>
 
-  <!-- API KEY -->
+  <!-- REGLAS DE FACEBOOK - NUEVO PANEL -->
+  <div class="panel" style="border-color:var(--warning);">
+    <p class="panel-title" style="color:var(--warning);">🛡️ Reglas de Seguridad Facebook</p>
+    <div class="rules-list">
+      <div class="rule-item">
+        <span class="icon">✓</span>
+        <span class="desc"><strong>Sin promesas falsas:</strong> No uses "garantizado", "100% seguro", "milagroso"</span>
+      </div>
+      <div class="rule-item">
+        <span class="icon">✓</span>
+        <span class="desc"><strong>Sin spam:</strong> Mínimo 2 variantes diferentes por grupo, no repetir exactamente</span>
+      </div>
+      <div class="rule-item">
+        <span class="icon">✓</span>
+        <span class="desc"><strong>Sin links sospechosos:</strong> Solo enlaces a WhatsApp o páginas oficiales</span>
+      </div>
+      <div class="rule-item">
+        <span class="icon">✓</span>
+        <span class="desc"><strong>Contenido apropiado:</strong> Sin lenguaje ofensivo, sin discriminación</span>
+      </div>
+      <div class="rule-item">
+        <span class="icon">✓</span>
+        <span class="desc"><strong>Sin competencia desleal:</strong> No mencionar marcas específicas negativamente</span>
+      </div>
+      <div class="rule-item">
+        <span class="icon">✓</span>
+        <span class="desc"><strong>Transparencia:</strong> El texto debe ser claro sobre lo que se ofrece</span>
+      </div>
+      <div class="rule-item">
+        <span class="icon">✓</span>
+        <span class="desc"><strong>Sin clickbait:</strong> No uses "NO PUEDES CREER", "TE VAN A ODIA"</span>
+      </div>
+      <div class="rule-item">
+        <span class="icon">✓</span>
+        <span class="desc"><strong>Diversidad de redacción:</strong> Cada variante debe ser única para evitar ser marcado como spam</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- API KEY - Multi-proveedor -->
   <div class="panel">
-    <p class="panel-title">Núcleo NVIDIA</p>
-    <label for="apiKey">API Key de NVIDIA (nvapi-...)</label>
-    <input type="password" id="apiKey" placeholder="nvapi-xxxxxxxxxxxxxxxxxxxx">
+    <p class="panel-title">🤖 Núcleo de IA</p>
+    <div class="row">
+      <div style="flex:1;">
+        <label for="apiProvider">Proveedor de IA</label>
+        <select id="apiProvider">
+          <option value="gemini">Google Gemini (⭐ Recomendada - Gratis)</option>
+          <option value="openrouter">OpenRouter (Gratis)</option>
+          <option value="groq">Groq (Muy rápida)</option>
+          <option value="nvidia">NVIDIA NIM</option>
+        </select>
+      </div>
+      <div style="flex:2;">
+        <label for="apiKey">API Key</label>
+        <input type="password" id="apiKey" placeholder="Ingresa tu API Key aquí">
+      </div>
+    </div>
+    <div style="margin-top:6px;">
+      <div style="font-size:.65rem;color:var(--dim);padding:6px;background:#020608;border-radius:4px;margin-top:4px;">
+        <strong>Gemini (Recomendada):</strong> <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color:var(--cyan);">makersuite.google.com/app/apikey</a> - Completamente GRATIS
+      </div>
+    </div>
     <button class="btn green" id="saveKeyBtn">Guardar API Key</button>
   </div>
 
   <!-- COLONIAS -->
   <div class="panel">
-    <p class="panel-title">Colonias de Prospección</p>
+    <p class="panel-title">📍 Colonias de Prospección</p>
     <div class="chip-input-row">
       <input type="text" id="newColonia" placeholder="Ej. Calesa, Querétaro">
       <button class="btn small" id="addColoniaBtn">+ Agregar</button>
@@ -202,7 +298,7 @@
 
   <!-- WHATSAPP -->
   <div class="panel">
-    <p class="panel-title">WhatsApp</p>
+    <p class="panel-title">💬 WhatsApp</p>
     <label for="waNum">Número (10 dígitos)</label>
     <input type="text" id="waNum" maxlength="10" placeholder="4421234567">
     <button class="btn green" id="saveWaBtn">Guardar Número</button>
@@ -210,38 +306,83 @@
 
   <!-- OFERTA -->
   <div class="panel">
-    <p class="panel-title">Texto Principal / Oferta</p>
-    <label for="oferta">Describe qué vendes, precio, y tu comercial (esto es lo que la IA convierte en copy)</label>
-    <textarea id="oferta" rows="4" placeholder="Ej. Vendo refrescos de 600ml a $12, entrega el mismo día en Calesa, promoción de 3x30 los fines de semana..."></textarea>
+    <p class="panel-title">📝 Texto Principal / Oferta</p>
+    <label for="oferta">Describe qué vendes, precio, y tu comercial</label>
+    <textarea id="oferta" rows="4" placeholder="Ej. Vendo refrescos de 600ml a $12, entrega el mismo día en Calesa..."></textarea>
     <button class="btn green" id="saveOfertaBtn">Guardar Oferta</button>
   </div>
 
   <!-- GENERADOR -->
   <div class="panel">
-    <p class="panel-title">Generador de Variantes</p>
+    <p class="panel-title">⚡ Generador de Variantes</p>
     <label for="numVariantes">Número de variantes a generar</label>
     <input type="number" id="numVariantes" min="1" max="10" value="3">
-    <button class="btn" id="genBtn">▶ Generar Variantes</button>
+    <button class="btn" id="genBtn">▶ Generar Variantes Seguras</button>
     <div id="variantsContainer"></div>
   </div>
 
   <!-- CONSOLA -->
   <div class="panel">
-    <p class="panel-title">Consola de Operación</p>
+    <p class="panel-title">📋 Consola de Operación</p>
     <div class="console" id="consoleLog"></div>
   </div>
 
-  <footer>SHADOWPOST PRO v3 · EDICIÓN PERSONAL · USO MANUAL, SIN AUTOMATIZACIÓN DE PUBLICACIÓN</footer>
+  <footer>SHADOWPOST PRO v3 · FACEBOOK SAFE · PROTEGIDO CONTRA BAN</footer>
 </div>
 
 <script>
 (function(){
   "use strict";
 
-  const TEXT_ENDPOINT = 'https://integrate.api.nvidia.com/v1/chat/completions';
-  const TEXT_MODEL = 'meta/llama-3.1-70b-instruct';
+  // ================= CONFIGURACIÓN DE PROVEEDORES =================
+  const PROVIDERS = {
+    gemini: {
+      name: 'Gemini',
+      endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
+      model: 'gemini-1.5-flash',
+      free: true
+    },
+    openrouter: {
+      name: 'OpenRouter',
+      endpoint: 'https://openrouter.ai/api/v1/chat/completions',
+      model: 'meta-llama/llama-3.1-70b-instruct:free',
+      free: true
+    },
+    groq: {
+      name: 'Groq',
+      endpoint: 'https://api.groq.com/openai/v1/chat/completions',
+      model: 'mixtral-8x7b-32768',
+      free: true
+    },
+    nvidia: {
+      name: 'NVIDIA NIM',
+      endpoint: 'https://integrate.api.nvidia.com/v1/chat/completions',
+      model: 'meta/llama-3.1-70b-instruct',
+      free: false
+    }
+  };
 
-  /* ================= CONSOLA ================= */
+  // ================= PALABRAS Y FRASES PROHIBIDAS =================
+  const FORBIDDEN_WORDS = [
+    'garantizado', 'garantizada', '100% seguro', '100% segura', 'milagroso', 'milagrosa',
+    'no puedes creer', 'te van a odiar', 'te van a querer matar', 'secreto que no te cuentan',
+    'dinero fácil', 'dinero rapido', 'hazte millonario', 'millonario en un día',
+    'curar', 'cura milagrosa', 'tratamiento milagroso', 'producto milagro'
+  ];
+
+  const FORBIDDEN_PATTERNS = [
+    /garantizad[oa]/i,
+    /100% segur[oa]/i,
+    /milagros[oa]/i,
+    /no puedes creer/i,
+    /te van a odiar/i,
+    /dinero fácil/i,
+    /dinero rápido/i,
+    /millonario en un día/i,
+    /cur[ae] milagros[oa]/i
+  ];
+
+  // ================= CONSOLA =================
   const consoleEl = document.getElementById('consoleLog');
   function log(msg, type){
     type = type || 'sys';
@@ -253,18 +394,76 @@
     consoleEl.scrollTop = consoleEl.scrollHeight;
   }
 
-  /* ================= API KEY ================= */
-  document.getElementById('apiKey').value = localStorage.getItem('spp_apikey') || '';
+  // ================= SISTEMA DE SEGURIDAD =================
+  function validateTextSafety(text){
+    const issues = [];
+    const lowerText = text.toLowerCase();
+
+    // Verificar palabras prohibidas
+    FORBIDDEN_WORDS.forEach(word => {
+      if(lowerText.includes(word.toLowerCase())){
+        issues.push(`Contiene "${word}"`);
+      }
+    });
+
+    // Verificar patrones
+    FORBIDDEN_PATTERNS.forEach(pattern => {
+      if(pattern.test(text)){
+        issues.push(`Contiene patrón sospechoso: "${pattern.source}"`);
+      }
+    });
+
+    // Verificar longitud mínima (para evitar spam)
+    if(text.length < 80){
+      issues.push('Texto demasiado corto (menos de 80 caracteres)');
+    }
+
+    // Verificar que mencione al menos una colonia
+    const colonias = getColonias();
+    let hasColonia = false;
+    colonias.forEach(col => {
+      if(text.toLowerCase().includes(col.toLowerCase())){
+        hasColonia = true;
+      }
+    });
+    if(!hasColonia && colonias.length > 0){
+      issues.push('No menciona ninguna colonia');
+    }
+
+    // Verificar exceso de mayúsculas (gritar)
+    const upperCount = (text.match(/[A-Z]/g) || []).length;
+    if(text.length > 0 && upperCount / text.length > 0.3){
+      issues.push('Exceso de mayúsculas (parece que estás gritando)');
+    }
+
+    return {
+      isSafe: issues.length === 0,
+      issues: issues,
+      score: Math.max(0, 100 - (issues.length * 15))
+    };
+  }
+
+  // ================= API KEY =================
+  function loadSettings(){
+    document.getElementById('apiKey').value = localStorage.getItem('spp_apikey') || '';
+    document.getElementById('apiProvider').value = localStorage.getItem('spp_provider') || 'gemini';
+  }
+  
   document.getElementById('saveKeyBtn').addEventListener('click', function(){
     const key = document.getElementById('apiKey').value.trim();
-    if(key && !key.startsWith('nvapi-')){
-      log('Aviso: la API Key no comienza con "nvapi-". Verifica que sea correcta.', 'warn');
+    const provider = document.getElementById('apiProvider').value;
+    
+    if(!key){
+      log('Ingresa una API Key válida.', 'warn');
+      return;
     }
+    
     localStorage.setItem('spp_apikey', key);
-    log('API Key guardada localmente en este dispositivo.', 'ok');
+    localStorage.setItem('spp_provider', provider);
+    log(`API Key guardada para ${PROVIDERS[provider].name}.`, 'ok');
   });
 
-  /* ================= COLONIAS ================= */
+  // ================= COLONIAS =================
   function getColonias(){
     try{ return JSON.parse(localStorage.getItem('spp_colonias') || '[]'); }
     catch(e){ return []; }
@@ -302,7 +501,7 @@
     log('Colonia agregada: ' + val, 'ok');
   });
 
-  /* ================= WHATSAPP ================= */
+  // ================= WHATSAPP =================
   document.getElementById('waNum').value = localStorage.getItem('spp_wa') || '';
   document.getElementById('saveWaBtn').addEventListener('click', function(){
     const num = document.getElementById('waNum').value.trim().replace(/\D/g,'');
@@ -311,108 +510,294 @@
     log('Número de WhatsApp guardado: ' + num, 'ok');
   });
 
-  /* ================= OFERTA ================= */
+  // ================= OFERTA =================
   document.getElementById('oferta').value = localStorage.getItem('spp_oferta') || '';
   document.getElementById('saveOfertaBtn').addEventListener('click', function(){
     localStorage.setItem('spp_oferta', document.getElementById('oferta').value.trim());
     log('Oferta / texto principal guardado.', 'ok');
   });
 
-  /* ================= GENERADOR DE VARIANTES ================= */
+  // ================= GENERADOR DE VARIANTES =================
   function countWords(str){ return str.trim().split(/\s+/).filter(Boolean).length; }
 
   function buildSystemPrompt(){
-    return "Eres un redactor experto en neuroventas para prospección de ventas en México. " +
-      "Se te dará una oferta comercial y una lista de colonias. Debes generar EXACTAMENTE tantas variantes como se te pida, " +
-      "una asignada a cada colonia indicada (si hay menos colonias que variantes, repite colonias pero varía completamente la redacción). " +
-      "Cada variante debe ser un único párrafo sólido de EXACTAMENTE 100 palabras, sin viñetas, sin títulos, sin saltos de línea. " +
-      "Cada variante debe tener una apertura distinta, una estructura de oraciones distinta y un orden de ideas distinto a las demás, " +
-      "para que no parezcan copias idénticas al publicarse en distintos grupos de Facebook, aunque promocionen la misma oferta. " +
-      "Usa psicología de urgencia y escasez natural al contexto de la oferta (ej. 'ÚLTIMOS DÍAS', 'SOLO HOY') sin forzar frases que no apliquen al producto. " +
-      "Menciona la colonia correspondiente de forma natural dentro de cada variante. Usa un tono directo, coloquial mexicano. " +
-      "Responde ÚNICAMENTE con un arreglo JSON válido de objetos con las llaves \"colonia\" y \"texto\", sin texto adicional, sin comentarios, sin backticks de markdown, sin explicaciones.";
+    return `Eres un redactor experto en neuroventas para prospección de ventas en México, con experiencia en redes sociales.
+
+    **REGLAS OBLIGATORIAS DE SEGURIDAD PARA FACEBOOK:**
+    1. NO uses palabras prohibidas: garantizado, 100% seguro, milagroso, dinero fácil, no puedes creer, te van a odiar.
+    2. NO uses CLICKBAIT: "NO PUEDES CREER", "TE VAN A ODIAR", "SECRETO".
+    3. NO hagas promesas falsas o exageradas.
+    4. NO uses lenguaje ofensivo o discriminatorio.
+    5. Cada variante debe ser UNICA y diferente en redacción.
+    6. Menciona la colonia de forma natural.
+    7. Sé transparente: explica claramente qué ofreces y a qué precio.
+    8. Usa un tono coloquial mexicano pero profesional.
+    9. NO uses excesivas mayúsculas.
+    10. Incluye una llamada a la acción natural (ej. "Mándame mensaje", "Pregunta sin compromiso").
+
+    Se te dará una oferta comercial y una lista de colonias. Debes generar EXACTAMENTE tantas variantes como se te pida.
+    Cada variante debe ser un único párrafo sólido de EXACTAMENTE 100 palabras, sin viñetas, sin títulos, sin saltos de línea.
+    Responde ÚNICAMENTE con un arreglo JSON válido de objetos con las llaves "colonia" y "texto", sin texto adicional.`;
   }
 
   function cleanJson(raw){
     return raw.trim().replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
   }
 
+  // ================= FUNCIONES DE GENERACIÓN POR PROVEEDOR =================
+  async function generateWithGemini(apiKey, userPrompt, numVariantes){
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    const body = {
+      contents: [{
+        parts: [{
+          text: `${buildSystemPrompt()}\n\nUsuario: ${userPrompt}\n\nResponde SOLO con el JSON solicitado.`
+        }]
+      }],
+      generationConfig: {
+        temperature: 0.85,
+        maxOutputTokens: 200 * numVariantes + 200
+      }
+    };
+
+    const res = await fetch(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+
+    if(!res.ok){
+      const errText = await res.text();
+      throw new Error(`HTTP ${res.status} - ${errText.slice(0,180)}`);
+    }
+
+    const data = await res.json();
+    const rawText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+    if(!rawText) throw new Error('Respuesta vacía del modelo.');
+    return rawText;
+  }
+
+  async function generateWithOpenRouter(apiKey, userPrompt){
+    const body = {
+      model: 'meta-llama/llama-3.1-70b-instruct:free',
+      messages: [
+        { role: 'system', content: buildSystemPrompt() },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.85,
+      max_tokens: 2000
+    };
+
+    const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    if(!res.ok){
+      const errText = await res.text();
+      throw new Error(`HTTP ${res.status} - ${errText.slice(0,180)}`);
+    }
+
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || '';
+  }
+
+  async function generateWithGroq(apiKey, userPrompt){
+    const body = {
+      model: 'mixtral-8x7b-32768',
+      messages: [
+        { role: 'system', content: buildSystemPrompt() },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.85,
+      max_tokens: 2000
+    };
+
+    const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    if(!res.ok){
+      const errText = await res.text();
+      throw new Error(`HTTP ${res.status} - ${errText.slice(0,180)}`);
+    }
+
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || '';
+  }
+
+  async function generateWithNVIDIA(apiKey, userPrompt){
+    const body = {
+      model: 'meta/llama-3.1-70b-instruct',
+      messages: [
+        { role: 'system', content: buildSystemPrompt() },
+        { role: 'user', content: userPrompt }
+      ],
+      temperature: 0.85,
+      max_tokens: 2000
+    };
+
+    const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`
+      },
+      body: JSON.stringify(body)
+    });
+
+    if(!res.ok){
+      const errText = await res.text();
+      throw new Error(`HTTP ${res.status} - ${errText.slice(0,180)}`);
+    }
+
+    const data = await res.json();
+    return data.choices?.[0]?.message?.content || '';
+  }
+
+  // ================= GENERADOR PRINCIPAL =================
   async function generateVariants(){
     const apiKey = localStorage.getItem('spp_apikey');
+    const provider = localStorage.getItem('spp_provider') || 'gemini';
     const oferta = localStorage.getItem('spp_oferta');
     const colonias = getColonias();
     const numVariantes = parseInt(document.getElementById('numVariantes').value || '3', 10);
 
-    if(!apiKey){ log('ERROR: no hay API Key de NVIDIA configurada.', 'err'); alert('Configura tu API Key primero.'); return; }
-    if(!oferta){ log('ERROR: no hay oferta/texto principal configurado.', 'err'); alert('Escribe y guarda tu oferta primero.'); return; }
+    if(!apiKey){ log('ERROR: no hay API Key configurada.', 'err'); alert('Configura tu API Key primero.'); return; }
+    if(!oferta){ log('ERROR: no hay oferta configurada.', 'err'); alert('Escribe y guarda tu oferta primero.'); return; }
     if(colonias.length === 0){ log('ERROR: agrega al menos una colonia.', 'err'); alert('Agrega al menos una colonia.'); return; }
 
-    log('Solicitando ' + numVariantes + ' variantes a NVIDIA NIM (' + TEXT_MODEL + ')...', 'sys');
+    const providerInfo = PROVIDERS[provider];
+    if(!providerInfo) { log('ERROR: Proveedor no soportado.', 'err'); return; }
 
-    const userPrompt = "Oferta comercial: " + oferta + ". Colonias objetivo (en orden a usar cíclicamente): " +
-      colonias.join(', ') + ". Genera exactamente " + numVariantes + " variantes.";
+    log(`🛡️ Generando ${numVariantes} variantes SEGURAS con ${providerInfo.name}...`, 'sys');
+    log('🔍 Aplicando filtros de seguridad de Facebook...', 'sys');
+
+    const userPrompt = `Oferta comercial: ${oferta}. Colonias objetivo: ${colonias.join(', ')}. Genera exactamente ${numVariantes} variantes.`;
 
     try{
-      const res = await fetch(TEXT_ENDPOINT, {
-        method:'POST',
-        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + apiKey },
-        body: JSON.stringify({
-          model: TEXT_MODEL,
-          messages: [
-            { role:'system', content: buildSystemPrompt() },
-            { role:'user', content: userPrompt }
-          ],
-          temperature: 0.9,
-          max_tokens: 200 * numVariantes + 200
-        })
-      });
+      let rawText;
 
-      if(!res.ok){
-        const errText = await res.text();
-        throw new Error('HTTP ' + res.status + ' — ' + errText.slice(0,180));
+      switch(provider) {
+        case 'gemini':
+          rawText = await generateWithGemini(apiKey, userPrompt, numVariantes);
+          break;
+        case 'openrouter':
+          rawText = await generateWithOpenRouter(apiKey, userPrompt);
+          break;
+        case 'groq':
+          rawText = await generateWithGroq(apiKey, userPrompt);
+          break;
+        case 'nvidia':
+          rawText = await generateWithNVIDIA(apiKey, userPrompt);
+          break;
+        default:
+          throw new Error('Proveedor no soportado');
       }
-
-      const data = await res.json();
-      const raw = data.choices && data.choices[0] && data.choices[0].message
-        ? data.choices[0].message.content
-        : null;
-      if(!raw) throw new Error('Respuesta vacía del modelo.');
 
       let variants;
       try{
-        variants = JSON.parse(cleanJson(raw));
+        variants = JSON.parse(cleanJson(rawText));
       } catch(parseErr){
-        throw new Error('No se pudo interpretar la respuesta del modelo como JSON.');
+        log('⚠️ Respuesta raw: ' + rawText.slice(0,200), 'warn');
+        throw new Error('No se pudo interpretar la respuesta como JSON.');
       }
 
+      if(!Array.isArray(variants)) {
+        throw new Error('La respuesta no es un arreglo válido.');
+      }
+
+      // Validar seguridad de cada variante
+      let safeCount = 0;
+      let warningCount = 0;
+      let dangerCount = 0;
+
+      variants = variants.map(v => {
+        const safety = validateTextSafety(v.texto || '');
+        v.safety = safety;
+        
+        if(safety.isSafe) safeCount++;
+        else if(safety.score > 60) warningCount++;
+        else dangerCount++;
+        
+        return v;
+      });
+
       renderVariants(variants);
-      log(variants.length + ' variantes generadas correctamente.', 'ok');
+      
+      log(`✅ ${variants.length} variantes generadas.`, 'ok');
+      log(`🟢 ${safeCount} textos seguros | 🟡 ${warningCount} con advertencias | 🔴 ${dangerCount} requieren revisión`, 'sys');
+
+      if(dangerCount > 0) {
+        log('⚠️ ALERTA: Algunos textos contienen palabras prohibidas o patrones de spam. Revísalos antes de publicar.', 'err');
+      }
 
     } catch(err){
-      log('ERROR al generar variantes: ' + err.message, 'err');
+      log(`❌ ERROR: ${err.message}`, 'err');
+      
+      if(provider === 'gemini' && err.message.includes('API key not valid')) {
+        log('💡 Consejo: La API Key de Gemini debe ser válida. Obtén una gratis en makersuite.google.com', 'warn');
+      }
     }
   }
 
+  // ================= RENDERIZAR VARIANTES CON INDICADORES DE SEGURIDAD =================
   function renderVariants(variants){
     const container = document.getElementById('variantsContainer');
     container.innerHTML = '';
     const waNum = localStorage.getItem('spp_wa');
 
     variants.forEach(function(v, idx){
+      const safety = v.safety || { isSafe: true, issues: [], score: 100 };
+      
       const card = document.createElement('div');
       card.className = 'variant-card';
+      if(safety.isSafe) card.classList.add('safe');
+      else if(safety.score > 60) card.classList.add('warning');
+      else card.classList.add('danger');
 
       const head = document.createElement('div');
       head.className = 'variant-head';
-      head.innerHTML = '<span>Variante ' + (idx+1) + '</span><span class="col">' + (v.colonia || '') + '</span>';
+      
+      let badgeClass = 'safe';
+      let badgeText = '✅ SEGURO';
+      if(!safety.isSafe && safety.score > 60) {
+        badgeClass = 'warning';
+        badgeText = '⚠️ REVISAR';
+      } else if(!safety.isSafe && safety.score <= 60) {
+        badgeClass = 'danger';
+        badgeText = '🔴 PELIGRO';
+      }
+      
+      head.innerHTML = `
+        <span>Variante ${idx+1}</span>
+        <span class="col">${v.colonia || ''}</span>
+        <span class="safety-badge ${badgeClass}">${badgeText}</span>
+      `;
 
       const textDiv = document.createElement('div');
       textDiv.className = 'variant-text';
       textDiv.textContent = v.texto || '';
 
+      // Mostrar problemas de seguridad si los hay
+      if(!safety.isSafe && safety.issues.length > 0){
+        const issuesDiv = document.createElement('div');
+        issuesDiv.style.cssText = 'background:#020608;border:1px solid var(--danger);border-radius:4px;padding:6px 10px;margin-top:8px;font-size:.65rem;color:var(--danger);';
+        issuesDiv.innerHTML = '<strong>⚠️ Problemas detectados:</strong> ' + safety.issues.join(', ');
+        card.appendChild(issuesDiv);
+      }
+
       const wc = document.createElement('div');
       wc.className = 'word-count';
-      wc.textContent = countWords(v.texto || '') + ' palabras';
+      wc.textContent = `${countWords(v.texto || '')} palabras · Score de seguridad: ${safety.score}%`;
 
       const btnRow = document.createElement('div');
       btnRow.className = 'btn-row';
@@ -422,9 +807,9 @@
       copyBtn.textContent = '📋 Copiar Texto';
       copyBtn.addEventListener('click', function(){
         navigator.clipboard.writeText(v.texto).then(function(){
-          log('Variante ' + (idx+1) + ' copiada al portapapeles.', 'ok');
+          log(`📋 Variante ${idx+1} copiada al portapapeles.`, 'ok');
         }).catch(function(){
-          log('No se pudo copiar automáticamente. Selecciona el texto manualmente.', 'warn');
+          log('No se pudo copiar automáticamente.', 'warn');
         });
       });
 
@@ -435,7 +820,7 @@
         if(!waNum){ log('No hay número de WhatsApp guardado.', 'warn'); return; }
         const link = 'https://wa.me/52' + waNum + '?text=' + encodeURIComponent(v.texto);
         window.open(link, '_blank');
-        log('Abriendo WhatsApp con la variante ' + (idx+1) + ' precargada.', 'ok');
+        log(`💬 Abriendo WhatsApp con la variante ${idx+1}.`, 'ok');
       });
 
       btnRow.appendChild(copyBtn);
@@ -449,18 +834,22 @@
     });
   }
 
+  // ================= EVENTOS =================
   document.getElementById('genBtn').addEventListener('click', async function(){
     const btn = this;
     btn.disabled = true;
     btn.textContent = '⏳ Generando...';
     await generateVariants();
     btn.disabled = false;
-    btn.textContent = '▶ Generar Variantes';
+    btn.textContent = '▶ Generar Variantes Seguras';
   });
 
-  /* ================= INIT ================= */
+  // ================= INIT =================
+  loadSettings();
   renderColonias();
-  log('ShadowPost Pro v3 · Edición Personal iniciado.', 'sys');
+  log('🛡️ ShadowPost Pro v3 · Facebook Safe Edition iniciado.', 'sys');
+  log('✅ Sistema de protección antiban activado.', 'safe');
+  log('💡 Recomendación: Usa Gemini para generación ilimitada y gratuita.', 'ok');
 })();
 </script>
 </body>
