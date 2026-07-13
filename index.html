@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>ShadowPost Pro v3 · Edición Personal</title>
+<style>
+  :root{
+    --bg:#050b12;
+    --panel:#0a1620;
+    --panel-edge:#132330;
+    --cyan:#20e8ff;
+    --emerald:#12ffb0;
+    --text:#c9f5ff;
+    --dim:#5b7d8c;
+    --danger:#ff3860;
+    --font-mono:'Courier New', ui-monospace, monospace;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:
+      radial-gradient(circle at 20% 10%, rgba(18,255,176,0.06), transparent 40%),
+      radial-gradient(circle at 80% 90%, rgba(32,232,255,0.08), transparent 45%),
+      repeating-linear-gradient(0deg, rgba(32,232,255,0.03) 0px, rgba(32,232,255,0.03) 1px, transparent 1px, transparent 28px),
+      repeating-linear-gradient(90deg, rgba(32,232,255,0.03) 0px, rgba(32,232,255,0.03) 1px, transparent 1px, transparent 28px),
+      var(--bg);
+    color:var(--text);
+    font-family:var(--font-mono);
+    min-height:100vh;
+    padding:14px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  header{
+    text-align:center;
+    padding:18px 10px 22px;
+    border-bottom:1px solid var(--panel-edge);
+    margin-bottom:16px;
+    position:relative;
+  }
+  header h1{
+    margin:0;
+    font-size:1.4rem;
+    letter-spacing:2.5px;
+    color:var(--cyan);
+    text-shadow:0 0 8px var(--cyan), 0 0 22px rgba(32,232,255,0.4);
+  }
+  header .sub{
+    color:var(--emerald);
+    font-size:.7rem;
+    letter-spacing:2px;
+    margin-top:6px;
+    text-shadow:0 0 6px rgba(18,255,176,0.5);
+  }
+  header::after{
+    content:'';
+    position:absolute;bottom:-1px;left:50%;transform:translateX(-50%);
+    width:120px;height:2px;
+    background:linear-gradient(90deg, transparent, var(--cyan), var(--emerald), transparent);
+    box-shadow:0 0 10px var(--cyan);
+  }
+  .panel{
+    background:linear-gradient(180deg, var(--panel), #071119);
+    border:1px solid var(--panel-edge);
+    border-radius:6px;
+    padding:14px;
+    margin-bottom:14px;
+    box-shadow:0 0 0 1px rgba(32,232,255,0.05), inset 0 0 30px rgba(32,232,255,0.02);
+  }
+  .panel-title{
+    color:var(--emerald);
+    font-size:.78rem;
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin:0 0 10px;
+    display:flex;align-items:center;gap:8px;
+  }
+  .panel-title::before{content:'▸';color:var(--cyan);}
+  label{
+    display:block;
+    font-size:.68rem;
+    color:var(--dim);
+    letter-spacing:1px;
+    text-transform:uppercase;
+    margin:10px 0 4px;
+  }
+  input[type=text], input[type=password], input[type=number], textarea{
+    width:100%;
+    background:#031019;
+    border:1px solid var(--panel-edge);
+    color:var(--cyan);
+    padding:9px 10px;
+    border-radius:4px;
+    font-family:var(--font-mono);
+    font-size:.85rem;
+    outline:none;
+    resize:vertical;
+  }
+  input:focus, textarea:focus{border-color:var(--cyan);box-shadow:0 0 8px rgba(32,232,255,0.35);}
+  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-end;}
+  .row > div{flex:1;min-width:140px;}
+  .btn{
+    background:transparent;
+    border:1px solid var(--cyan);
+    color:var(--cyan);
+    padding:10px 14px;
+    border-radius:4px;
+    font-family:var(--font-mono);
+    font-size:.78rem;
+    letter-spacing:1px;
+    text-transform:uppercase;
+    cursor:pointer;
+    transition:.15s;
+    width:100%;
+    margin-top:12px;
+  }
+  .btn:hover{background:rgba(32,232,255,0.1);box-shadow:0 0 14px rgba(32,232,255,0.4);}
+  .btn:disabled{opacity:.4;cursor:not-allowed;}
+  .btn.green{border-color:var(--emerald);color:var(--emerald);}
+  .btn.green:hover{background:rgba(18,255,176,0.1);box-shadow:0 0 14px rgba(18,255,176,0.4);}
+  .btn.small{width:auto;padding:7px 12px;font-size:.68rem;margin-top:0;}
+  .console{
+    background:#020608;
+    border:1px solid var(--panel-edge);
+    border-radius:6px;
+    padding:10px;
+    height:200px;
+    overflow-y:auto;
+    font-size:.72rem;
+    line-height:1.5;
+  }
+  .console .l{margin:0;white-space:pre-wrap;word-break:break-word;}
+  .console .sys{color:var(--dim);}
+  .console .ok{color:var(--emerald);}
+  .console .warn{color:#ffb020;}
+  .console .err{color:var(--danger);}
+  footer{text-align:center;color:var(--dim);font-size:.65rem;margin:20px 0 6px;letter-spacing:1px;}
+  ::-webkit-scrollbar{width:6px;}
+  ::-webkit-scrollbar-thumb{background:var(--panel-edge);border-radius:4px;}
+
+  /* Colonias chips */
+  .chip-input-row{display:flex;gap:8px;margin-top:6px;}
+  .chip-input-row input{flex:1;}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;}
+  .chip{
+    background:#031019;border:1px solid var(--emerald);color:var(--emerald);
+    border-radius:20px;padding:4px 10px;font-size:.7rem;display:flex;align-items:center;gap:6px;
+  }
+  .chip button{
+    background:none;border:none;color:var(--danger);cursor:pointer;font-size:.8rem;line-height:1;
+    font-family:var(--font-mono);
+  }
+
+  /* Variantes */
+  .variant-card{
+    background:#031019;
+    border:1px solid var(--panel-edge);
+    border-radius:6px;
+    padding:12px;
+    margin-top:12px;
+  }
+  .variant-head{
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:.68rem;color:var(--dim);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px;
+  }
+  .variant-head span.col{color:var(--emerald);}
+  .variant-text{
+    font-size:.82rem;line-height:1.5;color:var(--text);white-space:pre-wrap;
+  }
+  .word-count{font-size:.65rem;color:var(--dim);text-align:right;margin-top:4px;}
+  .btn-row{display:flex;gap:8px;margin-top:8px;flex-wrap:wrap;}
+  .btn-row .btn{margin-top:0;flex:1;min-width:110px;}
+  .wa-btn{border-color:var(--emerald);color:var(--emerald);}
+  .wa-btn:hover{background:rgba(18,255,176,0.12);box-shadow:0 0 14px rgba(18,255,176,0.5);}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <h1>SHADOWPOST PRO v3</h1>
+    <div class="sub">EDICIÓN PERSONAL · GENERADOR DE VARIANTES NEUROVENTAS</div>
+  </header>
+
+  <!-- API KEY -->
+  <div class="panel">
+    <p class="panel-title">Núcleo NVIDIA</p>
+    <label for="apiKey">API Key de NVIDIA (nvapi-...)</label>
+    <input type="password" id="apiKey" placeholder="nvapi-xxxxxxxxxxxxxxxxxxxx">
+    <button class="btn green" id="saveKeyBtn">Guardar API Key</button>
+  </div>
+
+  <!-- COLONIAS -->
+  <div class="panel">
+    <p class="panel-title">Colonias de Prospección</p>
+    <div class="chip-input-row">
+      <input type="text" id="newColonia" placeholder="Ej. Calesa, Querétaro">
+      <button class="btn small" id="addColoniaBtn">+ Agregar</button>
+    </div>
+    <div class="chips" id="coloniaChips"></div>
+  </div>
+
+  <!-- WHATSAPP -->
+  <div class="panel">
+    <p class="panel-title">WhatsApp</p>
+    <label for="waNum">Número (10 dígitos)</label>
+    <input type="text" id="waNum" maxlength="10" placeholder="4421234567">
+    <button class="btn green" id="saveWaBtn">Guardar Número</button>
+  </div>
+
+  <!-- OFERTA -->
+  <div class="panel">
+    <p class="panel-title">Texto Principal / Oferta</p>
+    <label for="oferta">Describe qué vendes, precio, y tu comercial (esto es lo que la IA convierte en copy)</label>
+    <textarea id="oferta" rows="4" placeholder="Ej. Vendo refrescos de 600ml a $12, entrega el mismo día en Calesa, promoción de 3x30 los fines de semana..."></textarea>
+    <button class="btn green" id="saveOfertaBtn">Guardar Oferta</button>
+  </div>
+
+  <!-- GENERADOR -->
+  <div class="panel">
+    <p class="panel-title">Generador de Variantes</p>
+    <label for="numVariantes">Número de variantes a generar</label>
+    <input type="number" id="numVariantes" min="1" max="10" value="3">
+    <button class="btn" id="genBtn">▶ Generar Variantes</button>
+    <div id="variantsContainer"></div>
+  </div>
+
+  <!-- CONSOLA -->
+  <div class="panel">
+    <p class="panel-title">Consola de Operación</p>
+    <div class="console" id="consoleLog"></div>
+  </div>
+
+  <footer>SHADOWPOST PRO v3 · EDICIÓN PERSONAL · USO MANUAL, SIN AUTOMATIZACIÓN DE PUBLICACIÓN</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const TEXT_ENDPOINT = 'https://integrate.api.nvidia.com/v1/chat/completions';
+  const TEXT_MODEL = 'meta/llama-3.1-70b-instruct';
+
+  /* ================= CONSOLA ================= */
+  const consoleEl = document.getElementById('consoleLog');
+  function log(msg, type){
+    type = type || 'sys';
+    const p = document.createElement('p');
+    p.className = 'l ' + type;
+    const t = new Date().toLocaleTimeString('es-MX', {hour12:false});
+    p.textContent = '[' + t + '] ' + msg;
+    consoleEl.appendChild(p);
+    consoleEl.scrollTop = consoleEl.scrollHeight;
+  }
+
+  /* ================= API KEY ================= */
+  document.getElementById('apiKey').value = localStorage.getItem('spp_apikey') || '';
+  document.getElementById('saveKeyBtn').addEventListener('click', function(){
+    const key = document.getElementById('apiKey').value.trim();
+    if(key && !key.startsWith('nvapi-')){
+      log('Aviso: la API Key no comienza con "nvapi-". Verifica que sea correcta.', 'warn');
+    }
+    localStorage.setItem('spp_apikey', key);
+    log('API Key guardada localmente en este dispositivo.', 'ok');
+  });
+
+  /* ================= COLONIAS ================= */
+  function getColonias(){
+    try{ return JSON.parse(localStorage.getItem('spp_colonias') || '[]'); }
+    catch(e){ return []; }
+  }
+  function saveColonias(list){ localStorage.setItem('spp_colonias', JSON.stringify(list)); }
+  function renderColonias(){
+    const list = getColonias();
+    const container = document.getElementById('coloniaChips');
+    container.innerHTML = '';
+    list.forEach(function(col, idx){
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.innerHTML = '<span>' + col + '</span><button data-idx="'+idx+'">✕</button>';
+      container.appendChild(chip);
+    });
+    container.querySelectorAll('button').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        const list2 = getColonias();
+        list2.splice(parseInt(btn.dataset.idx,10), 1);
+        saveColonias(list2);
+        renderColonias();
+        log('Colonia eliminada.', 'warn');
+      });
+    });
+  }
+  document.getElementById('addColoniaBtn').addEventListener('click', function(){
+    const input = document.getElementById('newColonia');
+    const val = input.value.trim();
+    if(!val){ log('Escribe el nombre de una colonia.', 'warn'); return; }
+    const list = getColonias();
+    list.push(val);
+    saveColonias(list);
+    input.value = '';
+    renderColonias();
+    log('Colonia agregada: ' + val, 'ok');
+  });
+
+  /* ================= WHATSAPP ================= */
+  document.getElementById('waNum').value = localStorage.getItem('spp_wa') || '';
+  document.getElementById('saveWaBtn').addEventListener('click', function(){
+    const num = document.getElementById('waNum').value.trim().replace(/\D/g,'');
+    if(num.length !== 10){ log('Ingresa un número válido de 10 dígitos.', 'warn'); return; }
+    localStorage.setItem('spp_wa', num);
+    log('Número de WhatsApp guardado: ' + num, 'ok');
+  });
+
+  /* ================= OFERTA ================= */
+  document.getElementById('oferta').value = localStorage.getItem('spp_oferta') || '';
+  document.getElementById('saveOfertaBtn').addEventListener('click', function(){
+    localStorage.setItem('spp_oferta', document.getElementById('oferta').value.trim());
+    log('Oferta / texto principal guardado.', 'ok');
+  });
+
+  /* ================= GENERADOR DE VARIANTES ================= */
+  function countWords(str){ return str.trim().split(/\s+/).filter(Boolean).length; }
+
+  function buildSystemPrompt(){
+    return "Eres un redactor experto en neuroventas para prospección de ventas en México. " +
+      "Se te dará una oferta comercial y una lista de colonias. Debes generar EXACTAMENTE tantas variantes como se te pida, " +
+      "una asignada a cada colonia indicada (si hay menos colonias que variantes, repite colonias pero varía completamente la redacción). " +
+      "Cada variante debe ser un único párrafo sólido de EXACTAMENTE 100 palabras, sin viñetas, sin títulos, sin saltos de línea. " +
+      "Cada variante debe tener una apertura distinta, una estructura de oraciones distinta y un orden de ideas distinto a las demás, " +
+      "para que no parezcan copias idénticas al publicarse en distintos grupos de Facebook, aunque promocionen la misma oferta. " +
+      "Usa psicología de urgencia y escasez natural al contexto de la oferta (ej. 'ÚLTIMOS DÍAS', 'SOLO HOY') sin forzar frases que no apliquen al producto. " +
+      "Menciona la colonia correspondiente de forma natural dentro de cada variante. Usa un tono directo, coloquial mexicano. " +
+      "Responde ÚNICAMENTE con un arreglo JSON válido de objetos con las llaves \"colonia\" y \"texto\", sin texto adicional, sin comentarios, sin backticks de markdown, sin explicaciones.";
+  }
+
+  function cleanJson(raw){
+    return raw.trim().replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
+  }
+
+  async function generateVariants(){
+    const apiKey = localStorage.getItem('spp_apikey');
+    const oferta = localStorage.getItem('spp_oferta');
+    const colonias = getColonias();
+    const numVariantes = parseInt(document.getElementById('numVariantes').value || '3', 10);
+
+    if(!apiKey){ log('ERROR: no hay API Key de NVIDIA configurada.', 'err'); alert('Configura tu API Key primero.'); return; }
+    if(!oferta){ log('ERROR: no hay oferta/texto principal configurado.', 'err'); alert('Escribe y guarda tu oferta primero.'); return; }
+    if(colonias.length === 0){ log('ERROR: agrega al menos una colonia.', 'err'); alert('Agrega al menos una colonia.'); return; }
+
+    log('Solicitando ' + numVariantes + ' variantes a NVIDIA NIM (' + TEXT_MODEL + ')...', 'sys');
+
+    const userPrompt = "Oferta comercial: " + oferta + ". Colonias objetivo (en orden a usar cíclicamente): " +
+      colonias.join(', ') + ". Genera exactamente " + numVariantes + " variantes.";
+
+    try{
+      const res = await fetch(TEXT_ENDPOINT, {
+        method:'POST',
+        headers:{ 'Content-Type':'application/json', 'Authorization':'Bearer ' + apiKey },
+        body: JSON.stringify({
+          model: TEXT_MODEL,
+          messages: [
+            { role:'system', content: buildSystemPrompt() },
+            { role:'user', content: userPrompt }
+          ],
+          temperature: 0.9,
+          max_tokens: 200 * numVariantes + 200
+        })
+      });
+
+      if(!res.ok){
+        const errText = await res.text();
+        throw new Error('HTTP ' + res.status + ' — ' + errText.slice(0,180));
+      }
+
+      const data = await res.json();
+      const raw = data.choices && data.choices[0] && data.choices[0].message
+        ? data.choices[0].message.content
+        : null;
+      if(!raw) throw new Error('Respuesta vacía del modelo.');
+
+      let variants;
+      try{
+        variants = JSON.parse(cleanJson(raw));
+      } catch(parseErr){
+        throw new Error('No se pudo interpretar la respuesta del modelo como JSON.');
+      }
+
+      renderVariants(variants);
+      log(variants.length + ' variantes generadas correctamente.', 'ok');
+
+    } catch(err){
+      log('ERROR al generar variantes: ' + err.message, 'err');
+    }
+  }
+
+  function renderVariants(variants){
+    const container = document.getElementById('variantsContainer');
+    container.innerHTML = '';
+    const waNum = localStorage.getItem('spp_wa');
+
+    variants.forEach(function(v, idx){
+      const card = document.createElement('div');
+      card.className = 'variant-card';
+
+      const head = document.createElement('div');
+      head.className = 'variant-head';
+      head.innerHTML = '<span>Variante ' + (idx+1) + '</span><span class="col">' + (v.colonia || '') + '</span>';
+
+      const textDiv = document.createElement('div');
+      textDiv.className = 'variant-text';
+      textDiv.textContent = v.texto || '';
+
+      const wc = document.createElement('div');
+      wc.className = 'word-count';
+      wc.textContent = countWords(v.texto || '') + ' palabras';
+
+      const btnRow = document.createElement('div');
+      btnRow.className = 'btn-row';
+
+      const copyBtn = document.createElement('button');
+      copyBtn.className = 'btn small';
+      copyBtn.textContent = '📋 Copiar Texto';
+      copyBtn.addEventListener('click', function(){
+        navigator.clipboard.writeText(v.texto).then(function(){
+          log('Variante ' + (idx+1) + ' copiada al portapapeles.', 'ok');
+        }).catch(function(){
+          log('No se pudo copiar automáticamente. Selecciona el texto manualmente.', 'warn');
+        });
+      });
+
+      const waBtn = document.createElement('button');
+      waBtn.className = 'btn small wa-btn';
+      waBtn.textContent = '💬 Abrir WhatsApp';
+      waBtn.addEventListener('click', function(){
+        if(!waNum){ log('No hay número de WhatsApp guardado.', 'warn'); return; }
+        const link = 'https://wa.me/52' + waNum + '?text=' + encodeURIComponent(v.texto);
+        window.open(link, '_blank');
+        log('Abriendo WhatsApp con la variante ' + (idx+1) + ' precargada.', 'ok');
+      });
+
+      btnRow.appendChild(copyBtn);
+      btnRow.appendChild(waBtn);
+
+      card.appendChild(head);
+      card.appendChild(textDiv);
+      card.appendChild(wc);
+      card.appendChild(btnRow);
+      container.appendChild(card);
+    });
+  }
+
+  document.getElementById('genBtn').addEventListener('click', async function(){
+    const btn = this;
+    btn.disabled = true;
+    btn.textContent = '⏳ Generando...';
+    await generateVariants();
+    btn.disabled = false;
+    btn.textContent = '▶ Generar Variantes';
+  });
+
+  /* ================= INIT ================= */
+  renderColonias();
+  log('ShadowPost Pro v3 · Edición Personal iniciado.', 'sys');
+})();
+</script>
+</body>
+</html>
