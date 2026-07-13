@@ -221,56 +221,29 @@
     <div class="sub">FACEBOOK SAFE EDITION · PROTECCIÓN ANTIBAN</div>
   </header>
 
-  <!-- REGLAS DE FACEBOOK - NUEVO PANEL -->
+  <!-- REGLAS DE FACEBOOK -->
   <div class="panel" style="border-color:var(--warning);">
     <p class="panel-title" style="color:var(--warning);">🛡️ Reglas de Seguridad Facebook</p>
     <div class="rules-list">
-      <div class="rule-item">
-        <span class="icon">✓</span>
-        <span class="desc"><strong>Sin promesas falsas:</strong> No uses "garantizado", "100% seguro", "milagroso"</span>
-      </div>
-      <div class="rule-item">
-        <span class="icon">✓</span>
-        <span class="desc"><strong>Sin spam:</strong> Mínimo 2 variantes diferentes por grupo, no repetir exactamente</span>
-      </div>
-      <div class="rule-item">
-        <span class="icon">✓</span>
-        <span class="desc"><strong>Sin links sospechosos:</strong> Solo enlaces a WhatsApp o páginas oficiales</span>
-      </div>
-      <div class="rule-item">
-        <span class="icon">✓</span>
-        <span class="desc"><strong>Contenido apropiado:</strong> Sin lenguaje ofensivo, sin discriminación</span>
-      </div>
-      <div class="rule-item">
-        <span class="icon">✓</span>
-        <span class="desc"><strong>Sin competencia desleal:</strong> No mencionar marcas específicas negativamente</span>
-      </div>
-      <div class="rule-item">
-        <span class="icon">✓</span>
-        <span class="desc"><strong>Transparencia:</strong> El texto debe ser claro sobre lo que se ofrece</span>
-      </div>
-      <div class="rule-item">
-        <span class="icon">✓</span>
-        <span class="desc"><strong>Sin clickbait:</strong> No uses "NO PUEDES CREER", "TE VAN A ODIA"</span>
-      </div>
-      <div class="rule-item">
-        <span class="icon">✓</span>
-        <span class="desc"><strong>Diversidad de redacción:</strong> Cada variante debe ser única para evitar ser marcado como spam</span>
-      </div>
+      <div class="rule-item"><span class="icon">✓</span><span class="desc"><strong>Sin promesas falsas:</strong> No uses "garantizado", "100% seguro", "milagroso"</span></div>
+      <div class="rule-item"><span class="icon">✓</span><span class="desc"><strong>Sin spam:</strong> Mínimo 2 variantes diferentes por grupo</span></div>
+      <div class="rule-item"><span class="icon">✓</span><span class="desc"><strong>Sin links sospechosos:</strong> Solo enlaces a WhatsApp o páginas oficiales</span></div>
+      <div class="rule-item"><span class="icon">✓</span><span class="desc"><strong>Contenido apropiado:</strong> Sin lenguaje ofensivo, sin discriminación</span></div>
+      <div class="rule-item"><span class="icon">✓</span><span class="desc"><strong>Sin clickbait:</strong> No uses "NO PUEDES CREER", "TE VAN A ODIAR"</span></div>
+      <div class="rule-item"><span class="icon">✓</span><span class="desc"><strong>Diversidad de redacción:</strong> Cada variante debe ser única</span></div>
     </div>
   </div>
 
-  <!-- API KEY - Multi-proveedor -->
+  <!-- API KEY -->
   <div class="panel">
     <p class="panel-title">🤖 Núcleo de IA</p>
     <div class="row">
       <div style="flex:1;">
         <label for="apiProvider">Proveedor de IA</label>
         <select id="apiProvider">
-          <option value="gemini">Google Gemini (⭐ Recomendada - Gratis)</option>
+          <option value="gemini">Google Gemini 2.0 (⭐ Recomendada - Gratis)</option>
           <option value="openrouter">OpenRouter (Gratis)</option>
           <option value="groq">Groq (Muy rápida)</option>
-          <option value="nvidia">NVIDIA NIM</option>
         </select>
       </div>
       <div style="flex:2;">
@@ -308,7 +281,7 @@
   <div class="panel">
     <p class="panel-title">📝 Texto Principal / Oferta</p>
     <label for="oferta">Describe qué vendes, precio, y tu comercial</label>
-    <textarea id="oferta" rows="4" placeholder="Ej. Vendo refrescos de 600ml a $12, entrega el mismo día en Calesa..."></textarea>
+    <textarea id="oferta" rows="4" placeholder="Ej. Telefonía ilimitada, activación por $100, instalación gratis, HBO Max a $80..."></textarea>
     <button class="btn green" id="saveOfertaBtn">Guardar Oferta</button>
   </div>
 
@@ -337,9 +310,9 @@
   // ================= CONFIGURACIÓN DE PROVEEDORES =================
   const PROVIDERS = {
     gemini: {
-      name: 'Gemini',
-      endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent',
-      model: 'gemini-1.5-flash',
+      name: 'Gemini 2.0',
+      endpoint: 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent',
+      model: 'gemini-2.0-flash-exp',
       free: true
     },
     openrouter: {
@@ -353,21 +326,14 @@
       endpoint: 'https://api.groq.com/openai/v1/chat/completions',
       model: 'mixtral-8x7b-32768',
       free: true
-    },
-    nvidia: {
-      name: 'NVIDIA NIM',
-      endpoint: 'https://integrate.api.nvidia.com/v1/chat/completions',
-      model: 'meta/llama-3.1-70b-instruct',
-      free: false
     }
   };
 
-  // ================= PALABRAS Y FRASES PROHIBIDAS =================
+  // ================= PALABRAS PROHIBIDAS =================
   const FORBIDDEN_WORDS = [
     'garantizado', 'garantizada', '100% seguro', '100% segura', 'milagroso', 'milagrosa',
-    'no puedes creer', 'te van a odiar', 'te van a querer matar', 'secreto que no te cuentan',
-    'dinero fácil', 'dinero rapido', 'hazte millonario', 'millonario en un día',
-    'curar', 'cura milagrosa', 'tratamiento milagroso', 'producto milagro'
+    'no puedes creer', 'te van a odiar', 'dinero fácil', 'dinero rapido', 'hazte millonario',
+    'curar', 'cura milagrosa', 'tratamiento milagroso'
   ];
 
   const FORBIDDEN_PATTERNS = [
@@ -377,9 +343,7 @@
     /no puedes creer/i,
     /te van a odiar/i,
     /dinero fácil/i,
-    /dinero rápido/i,
-    /millonario en un día/i,
-    /cur[ae] milagros[oa]/i
+    /dinero rápido/i
   ];
 
   // ================= CONSOLA =================
@@ -399,26 +363,22 @@
     const issues = [];
     const lowerText = text.toLowerCase();
 
-    // Verificar palabras prohibidas
     FORBIDDEN_WORDS.forEach(word => {
       if(lowerText.includes(word.toLowerCase())){
         issues.push(`Contiene "${word}"`);
       }
     });
 
-    // Verificar patrones
     FORBIDDEN_PATTERNS.forEach(pattern => {
       if(pattern.test(text)){
-        issues.push(`Contiene patrón sospechoso: "${pattern.source}"`);
+        issues.push(`Contiene patrón sospechoso`);
       }
     });
 
-    // Verificar longitud mínima (para evitar spam)
     if(text.length < 80){
       issues.push('Texto demasiado corto (menos de 80 caracteres)');
     }
 
-    // Verificar que mencione al menos una colonia
     const colonias = getColonias();
     let hasColonia = false;
     colonias.forEach(col => {
@@ -430,10 +390,9 @@
       issues.push('No menciona ninguna colonia');
     }
 
-    // Verificar exceso de mayúsculas (gritar)
     const upperCount = (text.match(/[A-Z]/g) || []).length;
     if(text.length > 0 && upperCount / text.length > 0.3){
-      issues.push('Exceso de mayúsculas (parece que estás gritando)');
+      issues.push('Exceso de mayúsculas');
     }
 
     return {
@@ -521,32 +480,33 @@
   function countWords(str){ return str.trim().split(/\s+/).filter(Boolean).length; }
 
   function buildSystemPrompt(){
-    return `Eres un redactor experto en neuroventas para prospección de ventas en México, con experiencia en redes sociales.
+    return `Eres un redactor experto en neuroventas para prospección de ventas en México.
 
-    **REGLAS OBLIGATORIAS DE SEGURIDAD PARA FACEBOOK:**
-    1. NO uses palabras prohibidas: garantizado, 100% seguro, milagroso, dinero fácil, no puedes creer, te van a odiar.
-    2. NO uses CLICKBAIT: "NO PUEDES CREER", "TE VAN A ODIAR", "SECRETO".
-    3. NO hagas promesas falsas o exageradas.
-    4. NO uses lenguaje ofensivo o discriminatorio.
-    5. Cada variante debe ser UNICA y diferente en redacción.
+    **REGLAS OBLIGATORIAS:**
+    1. NO uses palabras prohibidas: garantizado, 100% seguro, milagroso, dinero fácil.
+    2. NO uses CLICKBAIT.
+    3. NO hagas promesas falsas.
+    4. NO uses lenguaje ofensivo.
+    5. Cada variante debe ser UNICA.
     6. Menciona la colonia de forma natural.
-    7. Sé transparente: explica claramente qué ofreces y a qué precio.
-    8. Usa un tono coloquial mexicano pero profesional.
+    7. Sé transparente con precios y ofertas.
+    8. Usa tono coloquial mexicano profesional.
     9. NO uses excesivas mayúsculas.
-    10. Incluye una llamada a la acción natural (ej. "Mándame mensaje", "Pregunta sin compromiso").
+    10. Incluye llamada a la acción natural.
 
-    Se te dará una oferta comercial y una lista de colonias. Debes generar EXACTAMENTE tantas variantes como se te pida.
-    Cada variante debe ser un único párrafo sólido de EXACTAMENTE 100 palabras, sin viñetas, sin títulos, sin saltos de línea.
-    Responde ÚNICAMENTE con un arreglo JSON válido de objetos con las llaves "colonia" y "texto", sin texto adicional.`;
+    Genera EXACTAMENTE las variantes solicitadas. Cada variante = párrafo de 100 palabras.
+    Responde ÚNICAMENTE con JSON: [{"colonia":"nombre","texto":"texto"}]`;
   }
 
   function cleanJson(raw){
     return raw.trim().replace(/^```json/i,'').replace(/^```/,'').replace(/```$/,'').trim();
   }
 
-  // ================= FUNCIONES DE GENERACIÓN POR PROVEEDOR =================
+  // ================= GENERACIÓN CON GEMINI CORREGIDA =================
   async function generateWithGemini(apiKey, userPrompt, numVariantes){
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+    // URL CORREGIDA - usando gemini-2.0-flash-exp
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key=${apiKey}`;
+    
     const body = {
       contents: [{
         parts: [{
@@ -555,7 +515,8 @@
       }],
       generationConfig: {
         temperature: 0.85,
-        maxOutputTokens: 200 * numVariantes + 200
+        maxOutputTokens: 800,
+        topP: 0.95
       }
     };
 
@@ -567,7 +528,14 @@
 
     if(!res.ok){
       const errText = await res.text();
-      throw new Error(`HTTP ${res.status} - ${errText.slice(0,180)}`);
+      let errorMsg = `HTTP ${res.status}`;
+      try {
+        const errJson = JSON.parse(errText);
+        errorMsg += ` - ${errJson.error?.message || errText}`;
+      } catch(e) {
+        errorMsg += ` - ${errText.slice(0,180)}`;
+      }
+      throw new Error(errorMsg);
     }
 
     const data = await res.json();
@@ -584,7 +552,7 @@
         { role: 'user', content: userPrompt }
       ],
       temperature: 0.85,
-      max_tokens: 2000
+      max_tokens: 800
     };
 
     const res = await fetch('https://openrouter.ai/api/v1/chat/completions', {
@@ -613,39 +581,10 @@
         { role: 'user', content: userPrompt }
       ],
       temperature: 0.85,
-      max_tokens: 2000
+      max_tokens: 800
     };
 
     const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify(body)
-    });
-
-    if(!res.ok){
-      const errText = await res.text();
-      throw new Error(`HTTP ${res.status} - ${errText.slice(0,180)}`);
-    }
-
-    const data = await res.json();
-    return data.choices?.[0]?.message?.content || '';
-  }
-
-  async function generateWithNVIDIA(apiKey, userPrompt){
-    const body = {
-      model: 'meta/llama-3.1-70b-instruct',
-      messages: [
-        { role: 'system', content: buildSystemPrompt() },
-        { role: 'user', content: userPrompt }
-      ],
-      temperature: 0.85,
-      max_tokens: 2000
-    };
-
-    const res = await fetch('https://integrate.api.nvidia.com/v1/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -678,10 +617,10 @@
     const providerInfo = PROVIDERS[provider];
     if(!providerInfo) { log('ERROR: Proveedor no soportado.', 'err'); return; }
 
-    log(`🛡️ Generando ${numVariantes} variantes SEGURAS con ${providerInfo.name}...`, 'sys');
+    log(`🛡️ Generando ${numVariantes} variantes con ${providerInfo.name}...`, 'sys');
     log('🔍 Aplicando filtros de seguridad de Facebook...', 'sys');
 
-    const userPrompt = `Oferta comercial: ${oferta}. Colonias objetivo: ${colonias.join(', ')}. Genera exactamente ${numVariantes} variantes.`;
+    const userPrompt = `Oferta: ${oferta}. Colonias: ${colonias.join(', ')}. Genera ${numVariantes} variantes.`;
 
     try{
       let rawText;
@@ -695,9 +634,6 @@
           break;
         case 'groq':
           rawText = await generateWithGroq(apiKey, userPrompt);
-          break;
-        case 'nvidia':
-          rawText = await generateWithNVIDIA(apiKey, userPrompt);
           break;
         default:
           throw new Error('Proveedor no soportado');
@@ -715,10 +651,8 @@
         throw new Error('La respuesta no es un arreglo válido.');
       }
 
-      // Validar seguridad de cada variante
-      let safeCount = 0;
-      let warningCount = 0;
-      let dangerCount = 0;
+      // Validar seguridad
+      let safeCount = 0, warningCount = 0, dangerCount = 0;
 
       variants = variants.map(v => {
         const safety = validateTextSafety(v.texto || '');
@@ -734,22 +668,23 @@
       renderVariants(variants);
       
       log(`✅ ${variants.length} variantes generadas.`, 'ok');
-      log(`🟢 ${safeCount} textos seguros | 🟡 ${warningCount} con advertencias | 🔴 ${dangerCount} requieren revisión`, 'sys');
+      log(`🟢 ${safeCount} seguras | 🟡 ${warningCount} con advertencias | 🔴 ${dangerCount} requieren revisión`, 'sys');
 
       if(dangerCount > 0) {
-        log('⚠️ ALERTA: Algunos textos contienen palabras prohibidas o patrones de spam. Revísalos antes de publicar.', 'err');
+        log('⚠️ ALERTA: Algunos textos contienen palabras prohibidas. Revísalos.', 'err');
       }
 
     } catch(err){
       log(`❌ ERROR: ${err.message}`, 'err');
       
-      if(provider === 'gemini' && err.message.includes('API key not valid')) {
-        log('💡 Consejo: La API Key de Gemini debe ser válida. Obtén una gratis en makersuite.google.com', 'warn');
+      if(provider === 'gemini') {
+        log('💡 Consejo: Verifica que tu API Key de Gemini sea válida en makersuite.google.com', 'warn');
+        log('💡 La URL correcta es: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent', 'warn');
       }
     }
   }
 
-  // ================= RENDERIZAR VARIANTES CON INDICADORES DE SEGURIDAD =================
+  // ================= RENDERIZAR VARIANTES =================
   function renderVariants(variants){
     const container = document.getElementById('variantsContainer');
     container.innerHTML = '';
@@ -787,40 +722,39 @@
       textDiv.className = 'variant-text';
       textDiv.textContent = v.texto || '';
 
-      // Mostrar problemas de seguridad si los hay
       if(!safety.isSafe && safety.issues.length > 0){
         const issuesDiv = document.createElement('div');
         issuesDiv.style.cssText = 'background:#020608;border:1px solid var(--danger);border-radius:4px;padding:6px 10px;margin-top:8px;font-size:.65rem;color:var(--danger);';
-        issuesDiv.innerHTML = '<strong>⚠️ Problemas detectados:</strong> ' + safety.issues.join(', ');
+        issuesDiv.innerHTML = '<strong>⚠️ Problemas:</strong> ' + safety.issues.join(', ');
         card.appendChild(issuesDiv);
       }
 
       const wc = document.createElement('div');
       wc.className = 'word-count';
-      wc.textContent = `${countWords(v.texto || '')} palabras · Score de seguridad: ${safety.score}%`;
+      wc.textContent = `${countWords(v.texto || '')} palabras · Seguridad: ${safety.score}%`;
 
       const btnRow = document.createElement('div');
       btnRow.className = 'btn-row';
 
       const copyBtn = document.createElement('button');
       copyBtn.className = 'btn small';
-      copyBtn.textContent = '📋 Copiar Texto';
+      copyBtn.textContent = '📋 Copiar';
       copyBtn.addEventListener('click', function(){
         navigator.clipboard.writeText(v.texto).then(function(){
-          log(`📋 Variante ${idx+1} copiada al portapapeles.`, 'ok');
+          log(`📋 Variante ${idx+1} copiada.`, 'ok');
         }).catch(function(){
-          log('No se pudo copiar automáticamente.', 'warn');
+          log('No se pudo copiar.', 'warn');
         });
       });
 
       const waBtn = document.createElement('button');
       waBtn.className = 'btn small wa-btn';
-      waBtn.textContent = '💬 Abrir WhatsApp';
+      waBtn.textContent = '💬 WhatsApp';
       waBtn.addEventListener('click', function(){
-        if(!waNum){ log('No hay número de WhatsApp guardado.', 'warn'); return; }
+        if(!waNum){ log('No hay número de WhatsApp.', 'warn'); return; }
         const link = 'https://wa.me/52' + waNum + '?text=' + encodeURIComponent(v.texto);
         window.open(link, '_blank');
-        log(`💬 Abriendo WhatsApp con la variante ${idx+1}.`, 'ok');
+        log(`💬 Abriendo WhatsApp.`, 'ok');
       });
 
       btnRow.appendChild(copyBtn);
@@ -849,7 +783,7 @@
   renderColonias();
   log('🛡️ ShadowPost Pro v3 · Facebook Safe Edition iniciado.', 'sys');
   log('✅ Sistema de protección antiban activado.', 'safe');
-  log('💡 Recomendación: Usa Gemini para generación ilimitada y gratuita.', 'ok');
+  log('💡 Usa Gemini 2.0 Flash - ES GRATIS y funciona perfecto.', 'ok');
 })();
 </script>
 </body>
